@@ -51,9 +51,10 @@ fun SignUpForm(name: String, modifier: Modifier = Modifier) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         var userName by rememberSaveable { mutableStateOf("") }
+        var userNameError by rememberSaveable { mutableStateOf(false) }
         var userEmail by rememberSaveable { mutableStateOf("") }
         var age by rememberSaveable { mutableStateOf("") }
-        var ct = LocalContext.current
+        val ct = LocalContext.current
 
         Text(
             text = "Sign Up Form!",
@@ -62,8 +63,12 @@ fun SignUpForm(name: String, modifier: Modifier = Modifier) {
         )
         TextField(
             value = userName,
+            isError = userNameError,
             label = {Text("Name")},
-            onValueChange = {userName = it}
+            onValueChange = {
+                userName = it
+                userNameError = false
+            }
         )
         TextField(
             value = userEmail,
@@ -78,10 +83,13 @@ fun SignUpForm(name: String, modifier: Modifier = Modifier) {
             onValueChange = {age = it}
         )
         Button(onClick = {
-            val message : String = if(userName.isNotBlank()){
-                "Thank you $userName!!!!"
+            val message : String
+            if(userName.isNotBlank()){
+                message = "Thank you $userName!!!!"
+                //userNameError = false
             } else{
-                "COMPLETE FORM BRO"
+                message = "COMPLETE FORM BRO"
+                userNameError = true
             }
             Toast.makeText(ct, message, Toast.LENGTH_SHORT).show()
         }) {
